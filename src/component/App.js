@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../App.css';
 import ListView from './ListView'
 import scriptLoader from 'react-async-script-loader';
+import SearchInput, {createFilter} from 'react-search-input';
 
 
 class App extends Component {
@@ -10,7 +11,7 @@ class App extends Component {
     this.loadMap = this.loadMap.bind(this);
     this.state = {
       places: [],
-      openInfoWindow: "",
+      query: ''
     }
   }
 
@@ -19,7 +20,7 @@ class App extends Component {
       this.loadMap()
     }
     else {
-      alert("script not loaded")
+      console.log("google maps API couldn't load.");
     }
   }
 
@@ -29,14 +30,14 @@ class App extends Component {
       zoom: 14,
       center: sultanAhmet
     });
-
     var CORSRequest = this.createCORSRequest('GET',"https://api.foursquare.com/v2/venues/search?ll=40.762026,-73.984096&query=museum&radius=2000&categoryId=4bf58dd8d48988d181941735&client_id=CFSMRM4YK0LMFIZIOO1ETN50A1TXPJENSO3EUOIEBXK3E5ER&client_secret=YJQZ5FTKIA5UHUDU2BNACLRW14WZBDQLOO0KIWNSBUC2QN4V&v=20201215");
     CORSRequest.onload = () => {
-      this.setState({ places: JSON.parse(CORSRequest.responseText).response.venues })
-      this.state.places.map(place => {
+      const filteredPlaces = JSON.parse(CORSRequest.responseText).response.venues.filter(createFilter(this.state.query, ['name', 'location.address']))
+      this.setState({ places: filteredPlaces })
+      filteredPlaces.map(place => {
         var contentString =
         `<div class="infoWindow">
-          <img src=${place.categories.prefix}.${place.categories.suffix} alt=${place.name}'s image'>
+          <img src=${place.categories.prefix}.${place.categories.suffix} alt="${place.name}'s image">
           <h1>${place.name}</h1>
           <h2>${place.location.address}</h2>
           <h3>${place.contact.formattedPhone? place.contact.formattedPhone : "phone number not available"}</h3>
@@ -56,9 +57,6 @@ class App extends Component {
         marker.addListener('click', function() {
           infowindow.open(map, marker);
         });
-
-
-
       })
     };
     CORSRequest.send();
@@ -85,6 +83,12 @@ class App extends Component {
     return xhr;
   }
 
+  // queryHandler takes the query from the ListView sets the state and reloads the maps.
+  queryHandler(query) {
+    this.setState({query});
+    this.loadMap();
+  }
+
 
   render() {
     return (
@@ -92,7 +96,7 @@ class App extends Component {
         <div id="map-container">
           <div id="map"></div>
         </div>
-        <ListView places={this.state.places}/>
+        <ListView places={this.state.places} settingQuery={(query) => {this.queryHandler(query)}}/>
       </div>
     )
   }
