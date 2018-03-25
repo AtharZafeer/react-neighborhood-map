@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import '../App.css';
 import ListView from './ListView'
 import scriptLoader from 'react-async-script-loader';
-import SearchInput, {createFilter} from 'react-search-input';
+import {createFilter} from 'react-search-input';
 
+var markers = [];
 
 class App extends Component {
   constructor(props) {
@@ -17,23 +18,26 @@ class App extends Component {
 
   componentWillReceiveProps({isScriptLoadSucceed}){
     if (isScriptLoadSucceed) {
-      this.loadMap()
+      // initiating the location and the map and giving these objects to the loadMap function.
+      var map = new window.google.maps.Map(document.getElementById('map'), {
+        zoom: 14,
+        center: new window.google.maps.LatLng(40.762026,-73.984096)
+      });
+      this.setState({map});
+      this.loadMap(map)
     }
     else {
       console.log("google maps API couldn't load.");
     }
   }
 
-  loadMap() {
-    var sultanAhmet = new window.google.maps.LatLng(40.762026,-73.984096);
-    var map = new window.google.maps.Map(document.getElementById('map'), {
-      zoom: 14,
-      center: sultanAhmet
-    });
+  loadMap(map) {
     var CORSRequest = this.createCORSRequest('GET',"https://api.foursquare.com/v2/venues/search?ll=40.762026,-73.984096&query=museum&radius=2000&categoryId=4bf58dd8d48988d181941735&client_id=CFSMRM4YK0LMFIZIOO1ETN50A1TXPJENSO3EUOIEBXK3E5ER&client_secret=YJQZ5FTKIA5UHUDU2BNACLRW14WZBDQLOO0KIWNSBUC2QN4V&v=20201215");
     CORSRequest.onload = () => {
       const filteredPlaces = JSON.parse(CORSRequest.responseText).response.venues.filter(createFilter(this.state.query, ['name', 'location.address']))
-      this.setState({ places: filteredPlaces })
+      this.setState({ places: filteredPlaces });
+      markers.forEach(m => { m.setMap(null) });
+      markers = [];
       filteredPlaces.map(place => {
         var contentString =
         `<div class="infoWindow">
@@ -48,15 +52,25 @@ class App extends Component {
         var infowindow = new window.google.maps.InfoWindow({
           content: contentString
         });
-
         var marker = new window.google.maps.Marker({
           map: map,
           position: place.location,
+          animation: window.google.maps.Animation.DROP,
           name : place.name
         });
         marker.addListener('click', function() {
           infowindow.open(map, marker);
+          if (marker.getAnimation() !== null) {
+            marker.setAnimation(null);
+          } else {
+            marker.setAnimation(window.google.maps.Animation.BOUNCE);
+            setTimeout(() => {marker.setAnimation(null);}, 300)
+          }
         });
+        marker.addListener('click', function() {
+          infowindow.open(map, marker);
+        });
+        markers.push(marker);
       })
     };
     CORSRequest.send();
@@ -86,7 +100,7 @@ class App extends Component {
   // queryHandler takes the query from the ListView sets the state and reloads the maps.
   queryHandler(query) {
     this.setState({query});
-    this.loadMap();
+    this.loadMap(this.state.map);
   }
 
 
