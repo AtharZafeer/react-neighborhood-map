@@ -25,7 +25,7 @@ class ListView extends Component {
           {this.props.places ? (
             this.props.places.map(place => {
               return (
-                <li key={place.id}>{place.name}</li>
+                <li key={place.id}><button class='button' type="button">{place.name}</button></li>
               )
             })
           ): (
