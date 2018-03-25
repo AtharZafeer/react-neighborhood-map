@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import poweredByFoursquare from '../images/foursquare.png'
 
 class ListView extends Component {
   constructor(props) {
@@ -25,13 +26,14 @@ class ListView extends Component {
           {this.props.places ? (
             this.props.places.map(place => {
               return (
-                <li key={place.id}><button class='button' type="button">{place.name}</button></li>
+                <li key={place.id}><button className='button' type="button">{place.name}</button></li>
               )
             })
           ): (
             <li>loading</li>
           )}
         </ul>
+        <img src={poweredByFoursquare} alt="Powered by foursquare"/>
       </div>
     )
   }

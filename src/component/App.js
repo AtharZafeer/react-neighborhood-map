@@ -41,12 +41,11 @@ class App extends Component {
       filteredPlaces.map(place => {
         var contentString =
         `<div class="infoWindow">
-          <img src=${place.categories.prefix}.${place.categories.suffix} alt="${place.name}'s image">
           <h1>${place.name}</h1>
-          <h2>${place.location.address}</h2>
+          <h2>${place.location.address ? place.location.address : place.location.formattedAddress[0]}</h2>
           <h3>${place.contact.formattedPhone? place.contact.formattedPhone : "phone number not available"}</h3>
           <p>${place.stats.checkinsCount} people have been here.</p>
-          <a href=${place.url}>read more</a>
+          ${place.url ? "<a href=" + place.url + ">read more</a>" : ""}
         </div>`
 
         var infowindow = new window.google.maps.InfoWindow({

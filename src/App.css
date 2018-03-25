@@ -47,7 +47,7 @@
 
 /* styling ul's scrollbar */
 .list-view > ul::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
 }
 .list-view > ul::-webkit-scrollbar-track {
   background: #f1f1f1;
@@ -66,13 +66,20 @@
   text-align: center;
 }
 .button {
-  padding: 10px 0;
+  padding: 5px 0;
   width: 100%;
-  font-size: 20px;
+  font-size: 16px;
   border: none;
   text-align: center;
+  background-color: white;
 }
 .button:hover {
   background-color: red;
   cursor: pointer;
+}
+.list-view > img {
+  padding: 0;
+  margin: 0;
+  margin-top: 20px;
+  width: calc(100% - 30px);
 }
