@@ -17,7 +17,8 @@ class App extends Component {
       infoWindows: [],
       places: [],
       map: {},
-      query: ''
+      query: '',
+      requestWasSuccessful: true
     }
   }
 
@@ -85,6 +86,9 @@ class App extends Component {
         infoWindows.push(infoWindow);
       })
     };
+    CORSRequest.onerror = () => {
+      this.setState({requestWasSuccessful: false});
+    }
     CORSRequest.send();
   }
 
@@ -117,20 +121,26 @@ class App extends Component {
 
 
   render() {
-    const {map, places} = this.state;
+    const {map, places, requestWasSuccessful} = this.state;
 
     return (
-      <div id="container">
-        <ListView
-          places={places}
-          settingQuery={(query) => {this.queryHandler(query)}}
-          markers={markers}
-          infoWindows={infoWindows}
-          map={map}/>
-        <div id="map-container" role="application" tabIndex="-1">
-            <div id="map" role="application"></div>
-          </div>
-      </div>
+      requestWasSuccessful ? (
+        <div id="container">
+          <ListView
+            places={places}
+            settingQuery={(query) => {this.queryHandler(query)}}
+            markers={markers}
+            infoWindows={infoWindows}
+            map={map}/>
+          <div id="map-container" role="application" tabIndex="-1">
+              <div id="map" role="application"></div>
+            </div>
+        </div>
+      ) : (
+        <div>
+          <h1>loading foursquare's api was unsuccessful. please try again later</h1>
+        </div>
+      )
     )
   }
 }
