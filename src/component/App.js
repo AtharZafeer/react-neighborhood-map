@@ -3,6 +3,7 @@ import '../App.css';
 import ListView from './ListView'
 import scriptLoader from 'react-async-script-loader';
 import {createFilter} from 'react-search-input';
+import { mapStyles } from '../mapStyles.js';
 
 var markers = [];
 var infoWindows = [];
@@ -25,7 +26,8 @@ class App extends Component {
       // initiating the location and the map and giving these objects to the loadMap function.
       var map = new window.google.maps.Map(document.getElementById('map'), {
         zoom: 13,
-        center: new window.google.maps.LatLng(40.762026,-73.984096)
+        center: new window.google.maps.LatLng(40.762026,-73.984096),
+        styles: mapStyles
       });
       this.setState({map});
       this.loadMap(map)
@@ -36,7 +38,7 @@ class App extends Component {
   }
 
   loadMap(map) {
-    var CORSRequest = this.createCORSRequest('GET',"https://api.foursquare.com/v2/venues/search?ll=40.762026,-73.984096&query=museum&radius=2000&categoryId=4bf58dd8d48988d181941735&client_id=CFSMRM4YK0LMFIZIOO1ETN50A1TXPJENSO3EUOIEBXK3E5ER&client_secret=YJQZ5FTKIA5UHUDU2BNACLRW14WZBDQLOO0KIWNSBUC2QN4V&v=20201215");
+    var CORSRequest = this.createCORSRequest('GET',"https://api.foursquare.com/v2/venues/search?ll=40.762026,-73.984096&query=museum&radius=2500&categoryId=4bf58dd8d48988d181941735&client_id=CFSMRM4YK0LMFIZIOO1ETN50A1TXPJENSO3EUOIEBXK3E5ER&client_secret=YJQZ5FTKIA5UHUDU2BNACLRW14WZBDQLOO0KIWNSBUC2QN4V&v=20201215&limit=50");
     CORSRequest.onload = () => {
       const filteredPlaces = JSON.parse(CORSRequest.responseText).response.venues.filter(createFilter(this.state.query, ['name', 'location.address']))
       this.setState({ places: filteredPlaces });
