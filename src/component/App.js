@@ -5,13 +5,17 @@ import scriptLoader from 'react-async-script-loader';
 import {createFilter} from 'react-search-input';
 
 var markers = [];
+var infoWindows = [];
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.loadMap = this.loadMap.bind(this);
     this.state = {
+      markers: [],
+      infoWindows: [],
       places: [],
+      map: {},
       query: ''
     }
   }
@@ -20,7 +24,7 @@ class App extends Component {
     if (isScriptLoadSucceed) {
       // initiating the location and the map and giving these objects to the loadMap function.
       var map = new window.google.maps.Map(document.getElementById('map'), {
-        zoom: 14,
+        zoom: 13,
         center: new window.google.maps.LatLng(40.762026,-73.984096)
       });
       this.setState({map});
@@ -38,6 +42,7 @@ class App extends Component {
       this.setState({ places: filteredPlaces });
       markers.forEach(m => { m.setMap(null) });
       markers = [];
+      infoWindows = [];
       filteredPlaces.map(place => {
         var contentString =
         `<div class="infoWindow">
@@ -45,11 +50,12 @@ class App extends Component {
           <h2>${place.location.address ? place.location.address : place.location.formattedAddress[0]}</h2>
           <h3>${place.contact.formattedPhone? place.contact.formattedPhone : "phone number not available"}</h3>
           <p>${place.stats.checkinsCount} people have been here.</p>
-          ${place.url ? "<a href=" + place.url + ">read more</a>" : ""}
+          ${place.url ? "<a href=" + place.url + ">Go to official website</a>" : ""}
         </div>`
 
-        var infowindow = new window.google.maps.InfoWindow({
-          content: contentString
+        var infoWindow= new window.google.maps.InfoWindow({
+          content: contentString,
+          name: place.name
         });
         var marker = new window.google.maps.Marker({
           map: map,
@@ -58,7 +64,7 @@ class App extends Component {
           name : place.name
         });
         marker.addListener('click', function() {
-          infowindow.open(map, marker);
+          infoWindow.open(map, marker);
           if (marker.getAnimation() !== null) {
             marker.setAnimation(null);
           } else {
@@ -67,9 +73,12 @@ class App extends Component {
           }
         });
         marker.addListener('click', function() {
-          infowindow.open(map, marker);
+          infoWindow.open(map, marker);
         });
         markers.push(marker);
+        infoWindows.push(infoWindow);
+        this.setState({markers})
+        this.setState({infoWindows})
       })
     };
     CORSRequest.send();
@@ -109,7 +118,12 @@ class App extends Component {
         <div id="map-container">
           <div id="map"></div>
         </div>
-        <ListView places={this.state.places} settingQuery={(query) => {this.queryHandler(query)}}/>
+        <ListView
+          places={this.state.places}
+          settingQuery={(query) => {this.queryHandler(query)}}
+          markers={this.state.markers}
+          infoWindows={this.state.infoWindows}
+          map={this.state.map}/>
       </div>
     )
   }
