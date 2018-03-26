@@ -11,7 +11,7 @@ var infoWindows = [];
 class App extends Component {
   constructor(props) {
     super(props);
-    this.loadMap = this.loadMap.bind(this);
+    this.loadMarkers = this.loadMarkers.bind(this);
     this.state = {
       markers: [],
       infoWindows: [],
@@ -23,29 +23,33 @@ class App extends Component {
 
   componentWillReceiveProps({isScriptLoadSucceed}){
     if (isScriptLoadSucceed) {
-      // initiating the location and the map and giving these objects to the loadMap function.
+      // initiating the map and giving it to the loadMarkers function.
       var map = new window.google.maps.Map(document.getElementById('map'), {
         zoom: 13,
         center: new window.google.maps.LatLng(40.762026,-73.984096),
         styles: mapStyles
       });
       this.setState({map});
-      this.loadMap(map)
+      this.loadMarkers(map)
     }
     else {
       console.log("google maps API couldn't load.");
     }
   }
 
-  loadMap(map) {
+  // this function takes in the map object and then sends a CORS request to the
+  // foursquares API to find the neariest museums and added the markers and
+  // inforwindows to the markers
+  loadMarkers(map) {
     var CORSRequest = this.createCORSRequest('GET',"https://api.foursquare.com/v2/venues/search?ll=40.762026,-73.984096&query=museum&radius=2500&categoryId=4bf58dd8d48988d181941735&client_id=CFSMRM4YK0LMFIZIOO1ETN50A1TXPJENSO3EUOIEBXK3E5ER&client_secret=YJQZ5FTKIA5UHUDU2BNACLRW14WZBDQLOO0KIWNSBUC2QN4V&v=20201215&limit=50");
     CORSRequest.onload = () => {
-      const filteredPlaces = JSON.parse(CORSRequest.responseText).response.venues.filter(createFilter(this.state.query, ['name', 'location.address']))
-      this.setState({ places: filteredPlaces });
+      this.setState({ places: JSON.parse(CORSRequest.responseText).response.venues.filter(createFilter(this.state.query, ['name', 'location.address']))});
       markers.forEach(m => { m.setMap(null) });
+      // Clearing the markers and the infoWindows arrays so that the old
+      // objects wouldn't be stacked below the new objects.
       markers = [];
       infoWindows = [];
-      filteredPlaces.map(place => {
+      this.state.places.map(place => {
         var contentString =
         `<div class="infoWindow">
           <h1>${place.name}</h1>
@@ -79,12 +83,9 @@ class App extends Component {
         });
         markers.push(marker);
         infoWindows.push(infoWindow);
-        this.setState({markers})
-        this.setState({infoWindows})
       })
     };
     CORSRequest.send();
-
   }
 
   // Used the tutorial in https://www.html5rocks.com/en/tutorials/cors/ to create a CORS request function.
@@ -101,29 +102,32 @@ class App extends Component {
       xhr.open(method, url);
 
     } else {
-      // Otherwise, CORS is not supported by the browser.
+      // Otherwise, alert the user that CORS is not supported by their browser.
       xhr = null;
+      alert("CORS Requests are not supported by your browser please switch to another browser to have access to the website.");
     }
     return xhr;
   }
 
-  // queryHandler takes the query from the ListView sets the state and reloads the maps.
+  // queryHandler takes the query from the ListView sets the state and reloads the markers.
   queryHandler(query) {
     this.setState({query});
-    this.loadMap(this.state.map);
+    this.loadMarkers(this.state.map);
   }
 
 
   render() {
+    const {map, places} = this.state;
+
     return (
       <div id="container">
         <ListView
-          places={this.state.places}
+          places={places}
           settingQuery={(query) => {this.queryHandler(query)}}
-          markers={this.state.markers}
-          infoWindows={this.state.infoWindows}
-          map={this.state.map}/>
-          <div id="map-container" role="application" tabindex="-1">
+          markers={markers}
+          infoWindows={infoWindows}
+          map={map}/>
+        <div id="map-container" role="application" tabIndex="-1">
             <div id="map" role="application"></div>
           </div>
       </div>
@@ -131,6 +135,7 @@ class App extends Component {
   }
 }
 
+// Using react-async-script-loader to laod the google maps and google places API.
 export default scriptLoader(
     [`https://maps.googleapis.com/maps/api/js?key=AIzaSyD_IeWHOd2g_nP9hz6o2ZdgHTVtfYinxZk&libraries=places`]
 )(App);

@@ -10,6 +10,9 @@ class ListView extends Component {
       query: ''
     };
   }
+
+  // takes the event and maps over the markers and infowindows to find
+  // the appropriate marker and the appropriate infoWindow and opening it.
   openMarker(e) {
       this.props.markers.map(marker => {
         if (e.target.value === marker.name) {
@@ -25,6 +28,7 @@ class ListView extends Component {
   render() {
     const {places, settingQuery} = this.props;
 
+    // Using npm's sortBy to sort the museums by their names.
     places.sort(sortBy('name'));
     return (
       <div className="list-view">
@@ -56,7 +60,7 @@ class ListView extends Component {
             <li>loading</li>
           )}
         </ul>
-        <img src={poweredByFoursquare} alt="Powered by foursquare"/>
+        <img src={poweredByFoursquare} alt="Powered by foursquare, logo"/>
       </div>
     )
   }
