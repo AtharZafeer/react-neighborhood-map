@@ -117,15 +117,15 @@ class App extends Component {
   render() {
     return (
       <div id="container">
-        <div id="map-container">
-          <div id="map"></div>
-        </div>
         <ListView
           places={this.state.places}
           settingQuery={(query) => {this.queryHandler(query)}}
           markers={this.state.markers}
           infoWindows={this.state.infoWindows}
           map={this.state.map}/>
+          <div id="map-container" role="application" tabindex="-1">
+            <div id="map" role="application"></div>
+          </div>
       </div>
     )
   }

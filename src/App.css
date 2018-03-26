@@ -21,25 +21,29 @@
   left: 0;
   padding: 0 15px;
 }
-.list-view > h2 {
+.list-view > h1 {
   width: calc(100% - 30px);
   margin: 0;
+  font-family:serif;
+  color: #aaaaaa;
   padding: 20px 0;
   text-align: center;
   border-bottom: solid 1px grey;
 }
 .list-view > input {
+  font-family: serif;
   margin: 30px;
   width: calc(100% - 100px);
   height: 25px;
   font-size: 20px;
   border-radius: 20px;
   padding-left: 10px;
-  border: solid 2px grey;
+  border: solid 2px #aaaaaa;
+  color: #aaaaaa;
 }
 .list-view > ul {
   overflow: auto;
-  height: 60%;
+  height: 70%;
   width: calc(100% - 100px);
   list-style: none;
   margin: 0;
@@ -72,14 +76,20 @@
   border: none;
   text-align: center;
   background-color: white;
+  font-family: serif;
+  color: #888;
 }
 .button:hover {
-  background-color: red;
+  color: #7FDBFF;
   cursor: pointer;
 }
 .list-view > img {
   padding: 0;
   margin: 0;
-  margin-top: 20px;
-  width: calc(100% - 30px);
+  position: absolute;
+  bottom: 25px;
+  width: calc(100% - 60px);
+}
+.infoWindow h1 {
+  color: #7FDBFF;
 }

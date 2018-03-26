@@ -23,7 +23,9 @@ class ListView extends Component {
       })
   }
   render() {
-    this.props.places.sort(sortBy('name'));
+    const {places, settingQuery} = this.props;
+
+    places.sort(sortBy('name'));
     return (
       <div className="list-view">
         <h1>Manhattan's Museums</h1>
@@ -33,15 +35,21 @@ class ListView extends Component {
           value={ this.state.query }
           onChange={(event) => {
             this.setState({ query: event.target.value });
-            this.props.settingQuery(event.target.value)}
+            settingQuery(event.target.value)}
           }
           role="search"
-          aria-labelledby="text filter"/>
+          aria-labelledby="Search museums"/>
         <ul id="list">
-          {this.props.places ? (
-            this.props.places.map(place => {
+          {places ? (
+            places.map(place => {
               return (
-                <li key={place.id}><button className='button' type="button" onClick={this.openMarker} value={place.name}>{place.name}</button></li>
+                <li key={place.id}>
+                  <button
+                    className='button'
+                    type="button"
+                    onClick={this.openMarker}
+                    value={place.name}>{place.name}</button>
+                </li>
               )
             })
           ): (
