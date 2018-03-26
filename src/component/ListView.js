@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import poweredByFoursquare from '../images/foursquare.png'
+import poweredByFoursquare from '../images/foursquare.png';
+import sortBy from 'sort-by';
 
 class ListView extends Component {
   constructor(props) {
@@ -22,6 +23,7 @@ class ListView extends Component {
       })
   }
   render() {
+    this.props.places.sort(sortBy('name'));
     return (
       <div className="list-view">
         <h1>Manhattan's Museums</h1>
