@@ -6,7 +6,7 @@
 }
 #map-container {
   height: 100%;
-  width: 75%;
+  width: 100%;
   position: absolute;
   right: 0;
 }
@@ -15,38 +15,46 @@
   right: 0;
 }
 .list-view {
-  height: 100vh;
+  height: 80%;
+  background-color: white;
   width: 25%;
   position: absolute;
+  top: 10%;
   left: 0;
   padding: 0 15px;
+  border-radius:0 10px 10px 0;
 }
 .list-view > h1 {
-  width: calc(100% - 30px);
-  margin: 0;
+  position: absolute;
+  top: 0;
   font-family:serif;
+  font-size: 26px;
   color: #aaaaaa;
-  padding: 20px 0;
+  padding: 10px 0;
   text-align: center;
+  width: calc(100% - 30px);
   border-bottom: solid 1px grey;
 }
 .list-view > input {
+  position: inherit;
+  top: 85px;
   font-family: serif;
-  margin: 30px;
-  width: calc(100% - 100px);
-  height: 25px;
-  font-size: 20px;
+  font-size: 16px;
   border-radius: 20px;
-  padding-left: 10px;
   border: solid 2px #aaaaaa;
   color: #aaaaaa;
+  padding: 5px;
+  padding-left: 15px;
+  width: calc(100% - 50px);
 }
 .list-view > ul {
   overflow: auto;
-  height: 70%;
-  width: calc(100% - 100px);
+  top: 110px;
+  bottom: 25px;
+  position: absolute;
   list-style: none;
-  margin: 0;
+  padding: 0 5px;
+  width: calc(100% - 40px);
 }
 
 /* styling ul's scrollbar */
@@ -84,12 +92,74 @@
   cursor: pointer;
 }
 .list-view > img {
-  padding: 0;
-  margin: 0;
   position: absolute;
-  bottom: 25px;
-  width: calc(100% - 60px);
+  bottom: 5px;
+  left: 0;
+  padding: 0 22.5%;
+  width: 55%;
 }
 .infoWindow h1 {
   color: #7FDBFF;
+}
+@media screen and (max-width: 1020px) {
+  .list-view > h1 {
+    font-size: 20px;
+  }
+  .list-view > input {
+    top: 70px;
+  }
+  .list-view > ul {
+    top: 95px;
+  }
+  .list-view > img {
+    padding: 0 15%;
+    width: 70%;
+  }
+}
+@media screen and (max-width: 790px) {
+  .list-view > h1 {
+    font-size: 16px;
+  }
+  .list-view > input {
+    top: 60px;
+    font-size: 12px;
+  }
+  .list-view > ul {
+    top: 85px;
+  }
+  .list-view button {
+    font-size: 10px;
+    padding: 0;
+  }
+}
+@media screen and (max-width: 630px) {
+  .list-view > input {
+    font-size: 10px;
+    top: 75px;
+    padding: 5px;
+    width: calc(100% - 40px);
+  }
+  .list-view > ul {
+    top: 95px;
+    bottom: 15px;
+  }
+}
+@media screen and (min-width: 1200px) {
+  .list-view > h1 {
+    font-size: 30px;
+  }
+  .list-view > input {
+    font-size: 28px;
+  }
+  .list-view > ul {
+    top: 130px;
+    bottom: 50px;
+  }
+  .list-view button {
+    font-size: 26px;
+  }
+  .list-view > img {
+    padding: 0 5%;
+    width: 90%;
+  }
 }
