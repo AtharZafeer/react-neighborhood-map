@@ -128,15 +128,15 @@ class App extends Component {
     return (
       requestWasSuccessful ? (
         <div id="container">
+          <div id="map-container" role="application" tabIndex="-1">
+              <div id="map" role="application"></div>
+          </div>
           <ListView
             places={places}
             settingQuery={(query) => {this.queryHandler(query)}}
             markers={markers}
             infoWindows={infoWindows}
             map={map}/>
-          <div id="map-container" role="application" tabIndex="-1">
-              <div id="map" role="application"></div>
-            </div>
         </div>
       ) : (
         <div>

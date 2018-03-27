@@ -20,6 +20,12 @@ class ListView extends Component {
             if (marker.name === infoWindow.name) {
               console.log(infoWindow.name);
               infoWindow.open(this.props.map, marker);
+              if (marker.getAnimation() !== null) {
+                marker.setAnimation(null);
+              } else {
+                marker.setAnimation(window.google.maps.Animation.BOUNCE);
+                setTimeout(() => {marker.setAnimation(null);}, 300)
+              }
             }
           })
         }
