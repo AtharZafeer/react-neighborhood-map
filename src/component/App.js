@@ -84,6 +84,8 @@ class App extends Component {
         });
         markers.push(marker);
         infoWindows.push(infoWindow);
+        this.setState({markers})
+        this.setState({infoWindows})
       })
     };
     CORSRequest.onerror = () => {
