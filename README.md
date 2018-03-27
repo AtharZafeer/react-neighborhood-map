@@ -16,9 +16,7 @@ npm start
 ```
 The browser should automatically open the app.  If it doesn't, navigate to [http://localhost:3000/](http://localhost:3000/)
 ## Loading the App in Production Mode:
-To run the app in production mode you've two choices:
-1. The first choice is you can open it in [my personal website.](www.manhattan-museums.malikalbeik.com)
-2. The second choice is you can run:
+To run the app in production mode run:
 ```
 npm run build
 ```
