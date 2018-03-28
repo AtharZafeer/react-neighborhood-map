@@ -15,6 +15,8 @@ once everything is setup run:
 npm start
 ```
 The browser should automatically open the app.  If it doesn't, navigate to [http://localhost:3000/](http://localhost:3000/)
+
+NOTE: Service worker for this app will only work when the app is in production mode.
 ## Loading the App in Production Mode:
 To run the app in production mode run:
 ```
