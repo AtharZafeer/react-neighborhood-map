@@ -35,6 +35,7 @@ class App extends Component {
     }
     else {
       console.log("google maps API couldn't load.");
+      this.setState({requestWasSuccessful: false})
     }
   }
 
@@ -140,7 +141,7 @@ class App extends Component {
         </div>
       ) : (
         <div>
-          <h1>loading foursquare's api was unsuccessful. please try again later</h1>
+          <h1>loading map's api was unsuccessful. please try again later</h1>
         </div>
       )
     )
